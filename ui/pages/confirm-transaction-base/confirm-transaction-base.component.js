@@ -663,6 +663,12 @@ export default class ConfirmTransactionBase extends Component {
             onAdvancedClick={() => {
               this.setState({ showingHardwareConnectionAdvancedPopover: true });
             }}
+            onClose={() => {
+              this.setState({
+                showingHardwareConnectionAdvancedPopover: false,
+                showingHardwareConnectionContents: false,
+              });
+            }}
           />
         </div>
       );
@@ -720,11 +726,6 @@ export default class ConfirmTransactionBase extends Component {
           ]}
         />
         {nonceField}
-        {showLedgerSteps ? (
-          <LedgerInstructionField
-            showDataInstruction={Boolean(txData.txParams?.data)}
-          />
-        ) : null}
         {showLedgerSteps ? (
           <HardwareConnectivityMessage
             connected={hardwareIsReady}
@@ -1207,7 +1208,7 @@ export default class ConfirmTransactionBase extends Component {
             renderSimulationFailureWarning ||
             !valid ||
             submitting ||
-            hardwareWalletRequiresConnection ||
+            (hardwareWalletRequiresConnection && !this.state.hardwareIsReady) ||
             (gasIsLoading && !gasFeeIsCustom)
           }
           onEdit={() => this.handleEdit()}
